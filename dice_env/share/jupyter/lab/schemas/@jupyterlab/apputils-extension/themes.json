@@ -1,72 +1,6 @@
 {
   "title": "Theme",
   "jupyter.lab.setting-icon-label": "Theme Manager",
-  "jupyter.lab.menus": {
-    "main": [
-      {
-        "id": "jp-mainmenu-settings",
-        "items": [
-          {
-            "type": "submenu",
-            "submenu": {
-              "id": "jp-mainmenu-settings-apputilstheme",
-              "label": "Theme",
-              "items": [
-                { "type": "separator" },
-                {
-                  "command": "apputils:adaptive-theme"
-                },
-                { "type": "separator" },
-                {
-                  "command": "apputils:theme-scrollbars"
-                },
-                { "type": "separator" },
-                {
-                  "command": "apputils:incr-font-size",
-                  "args": {
-                    "key": "code-font-size"
-                  }
-                },
-                {
-                  "command": "apputils:decr-font-size",
-                  "args": {
-                    "key": "code-font-size"
-                  }
-                },
-                { "type": "separator" },
-                {
-                  "command": "apputils:incr-font-size",
-                  "args": {
-                    "key": "content-font-size1"
-                  }
-                },
-                {
-                  "command": "apputils:decr-font-size",
-                  "args": {
-                    "key": "content-font-size1"
-                  }
-                },
-                { "type": "separator" },
-                {
-                  "command": "apputils:incr-font-size",
-                  "args": {
-                    "key": "ui-font-size1"
-                  }
-                },
-                {
-                  "command": "apputils:decr-font-size",
-                  "args": {
-                    "key": "ui-font-size1"
-                  }
-                }
-              ]
-            },
-            "rank": 0
-          }
-        ]
-      }
-    ]
-  },
   "description": "Theme manager settings.",
   "type": "object",
   "additionalProperties": false,
@@ -109,26 +43,8 @@
     "theme": {
       "type": "string",
       "title": "Selected Theme",
-      "description": "Application-level visual styling theme. Ignored when Adaptive Theme is enabled.",
+      "description": "Application-level visual styling theme",
       "default": "JupyterLab Light"
-    },
-    "adaptive-theme": {
-      "type": "boolean",
-      "title": "Adaptive Theme",
-      "description": "Synchronize visual styling theme with system settings",
-      "default": false
-    },
-    "preferred-light-theme": {
-      "type": "string",
-      "title": "Preferred Light Theme",
-      "description": "Application-level light visual styling theme. Ignored when Adaptive Theme is disabled.",
-      "default": "JupyterLab Light"
-    },
-    "preferred-dark-theme": {
-      "type": "string",
-      "title": "Preferred Dark Theme",
-      "description": "Application-level dark visual styling theme. Ignored when Adaptive Theme is disabled.",
-      "default": "JupyterLab Dark"
     },
     "theme-scrollbars": {
       "type": "boolean",
