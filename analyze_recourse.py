@@ -36,7 +36,7 @@ def main():
              protected_attributes=protected_attributes)
     
     # Extract features, target, and protected attributes
-    X = dataset.drop(['income', 'gender'], axis=1)
+    X = dataset.drop(['income'], axis=1)
     y = dataset['income']
     protected = dataset['gender'].map({'Male': 1, 'Female': 0})
     
@@ -111,6 +111,9 @@ def main():
     np.random.seed(42)
     sample_indices = np.random.choice(X_test.index, size=5, replace=False)
     sample_instances = X_test.loc[sample_indices]
+    
+    # Ensure 'gender' column is included in sample_instances
+    sample_instances['gender'] = dataset.loc[sample_indices, 'gender']
     
     # Generate counterfactuals for both models
     standard_cfs = standard_exp.generate_counterfactuals(sample_instances, total_CFs=3, desired_class="opposite")
