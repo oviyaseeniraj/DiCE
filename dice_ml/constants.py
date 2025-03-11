@@ -6,8 +6,9 @@ class BackEndTypes:
     Tensorflow1 = 'TF1'
     Tensorflow2 = 'TF2'
     Pytorch = 'PYT'
+    AdversarialDebiasing = 'adversarial_debiasing'
 
-    ALL = [Sklearn, Tensorflow1, Tensorflow2, Pytorch]
+    ALL = [Sklearn, Tensorflow1, Tensorflow2, Pytorch, AdversarialDebiasing]
 
 
 class SamplingStrategy:
@@ -37,3 +38,9 @@ class _PostHocSparsityTypes:
     BINARY = 'binary'
 
     ALL = [LINEAR, BINARY]
+
+
+class FairnessMetrics:
+    DemographicParity = "demographic_parity"
+    EqualOpportunity = "equal_opportunity"
+    DisparateImpact = "disparate_impact"

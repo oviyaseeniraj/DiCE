@@ -28,6 +28,7 @@ class PublicData(_BaseData):
                                            Defaults to the range inferred from training data.
         :param continuous_features_precision (optional): Dictionary with feature names as keys and precisions as values.
         :param data_name (optional): Dataset name
+        :param protected_attributes (optional): List of feature names that are protected attributes.
         """
         self._validate_and_set_outcome_name(params=params)
         self._validate_and_set_dataframe(params=params)
@@ -57,6 +58,7 @@ class PublicData(_BaseData):
 
         self._validate_and_set_permitted_range(params=params)
         self._validate_and_set_data_name(params=params)
+        self._validate_and_set_protected_attributes(params=params)
 
     def _validate_and_set_dataframe(self, params):
         """Validate and set the dataframe."""
@@ -484,3 +486,10 @@ class PublicData(_BaseData):
 
     def get_all_dummy_colnames(self):
         return pd.get_dummies(self.data_df[self.feature_names]).columns
+
+    def _validate_and_set_protected_attributes(self, params):
+        """Validate and set the list of protected attributes."""
+        if 'protected_attributes' in params:
+            self.protected_attributes = params['protected_attributes']
+        else:
+            self.protected_attributes = None

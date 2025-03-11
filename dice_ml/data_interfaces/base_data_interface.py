@@ -27,6 +27,21 @@ class _BaseData(ABC):
         else:
             raise ValueError("should provide the name of outcome feature as a string")
 
+    def _validate_and_set_protected_attributes(self, params):
+        """Validate and set the protected attributes."""
+        if 'protected_attributes' in params:
+            self.protected_attributes = params['protected_attributes']
+            
+            # Validate that protected attributes are actual features
+            if hasattr(self, 'feature_names'):
+                invalid_attrs = set(self.protected_attributes) - set(self.feature_names)
+                if invalid_attrs:
+                    raise UserConfigValidationException(
+                        f"Protected attributes {invalid_attrs} are not valid feature names"
+                    )
+        else:
+            self.protected_attributes = []
+
     def set_continuous_feature_indexes(self, query_instance):
         """Remaps continuous feature indices based on the query instance"""
         self.continuous_feature_indexes = [query_instance.columns.get_loc(name) for name in

@@ -33,6 +33,7 @@ class PrivateData(_BaseData):
                                as values.
                                Default MAD value is 1 for all features.
         :param data_name (optional): Dataset name
+        :param protected_attributes (optional): List of feature names that are protected attributes.
         """
         if sys.version_info > (3, 6, 0) and isinstance(params['features'], (dict, collections.OrderedDict)):
             features_dict = params['features']
@@ -74,6 +75,7 @@ class PrivateData(_BaseData):
                 self.type_and_precision[feature_name] = 'int'
 
         self._validate_and_set_data_name(params=params)
+        self._validate_and_set_protected_attributes(params=params)
 
     def _validate_and_set_type_and_precision(self, params):
         """Validate and set the type and precision."""
@@ -275,7 +277,7 @@ class PrivateData(_BaseData):
                 out[column] = self.labelencoder[column].inverse_transform(out[column].round().astype(int).tolist())
             return out
         elif isinstance(data, list):
-            for column in self.categorical_feature_indexes:
+            for column in self.categorical_indexes:
                 out[column] = self.labelencoder[self.feature_names[column]].inverse_transform([round(out[column])])[0]
             return out
 
@@ -417,3 +419,10 @@ class PrivateData(_BaseData):
         if normalized:
             raise NotImplementedError("Normalized feature range not supported for private data interface")
         return feature_range_input
+
+    def _validate_and_set_protected_attributes(self, params):
+        """Validate and set the protected attributes."""
+        if 'protected_attributes' in params:
+            self.protected_attributes = params['protected_attributes']
+        else:
+            self.protected_attributes = []

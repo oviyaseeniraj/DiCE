@@ -13,7 +13,7 @@ from dice_ml.constants import BackEndTypes, ModelTypes
 class Model:
     """An interface class to different ML Model implementations."""
     def __init__(self, model=None, model_path='', backend=BackEndTypes.Tensorflow1, model_type=ModelTypes.Classifier,
-                 func=None, kw_args=None):
+                 func=None, kw_args=None, protected_attributes=None, debias_weight=0.5):
         """Init method
 
         :param model: trained ML model.
@@ -30,6 +30,8 @@ class Model:
         :param func: function transformation required for ML model. If func is None, then func will be the identity function.
         :param kw_args: Dictionary of additional keyword arguments to pass to func. DiCE's data_interface is appended
                         to the dictionary of kw_args, by default.
+        :param protected_attributes: list of feature names that are protected attributes (for adversarial debiasing)
+        :param debias_weight: weight for the adversarial debiasing component (0-1)
         """
         if backend not in BackEndTypes.ALL:
             warnings.warn('{0} backend not in supported backends {1}'.format(
@@ -41,6 +43,9 @@ class Model:
             )
 
         self.model_type = model_type
+        self.protected_attributes = protected_attributes
+        self.debias_weight = debias_weight
+        
         if model is None and model_path == '':
             raise ValueError("should provide either a trained model or the path to a model")
         else:
@@ -50,7 +55,13 @@ class Model:
         """Decides the Model implementation type."""
 
         self.__class__ = decide(backend)
-        self.__init__(model, model_path, backend, func, kw_args)
+        if backend == BackEndTypes.AdversarialDebiasing:
+            self.__init__(model, model_path, backend, func, kw_args, 
+                          protected_attributes=self.protected_attributes, 
+                          debias_weight=self.debias_weight,
+                          model_type=self.model_type)
+        else:
+            self.__init__(model, model_path, backend, func, kw_args)
 
 
 def decide(backend):
@@ -82,6 +93,15 @@ def decide(backend):
             raise UserConfigValidationException("Unable to import torch. Please install torch from https://pytorch.org/")
         from dice_ml.model_interfaces.pytorch_model import PyTorchModel
         return PyTorchModel
+        
+    elif backend == BackEndTypes.AdversarialDebiasing:
+        # Adversarial Debiasing backend
+        try:
+            import tensorflow  # noqa: F401
+        except ImportError:
+            raise UserConfigValidationException("Unable to import tensorflow. Please install tensorflow")
+        from dice_ml.model_interfaces.adversarial_debiaser import AdversarialDebiaser
+        return AdversarialDebiaser
 
     else:
         # all other implementations and frameworks
